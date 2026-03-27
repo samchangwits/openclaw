@@ -10,6 +10,7 @@ services:
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY:-}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE:-}
       TZ: ${OPENCLAW_TZ:-UTC}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     volumes:
       - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
       - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
@@ -24,6 +25,9 @@ services:
     ports:
       - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
       - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     init: true
     restart: unless-stopped
     command:
@@ -76,3 +80,37 @@ services:
     entrypoint: ["node", "dist/index.js"]
     depends_on:
       - openclaw-gateway
+
+  openclaw-sdet:
+    image: ${OPENCLAW_IMAGE:-openclaw:local}
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_GATEWAY_TOKEN: d97bcc3dc98c5960fea5a77d3e968839af4bc1158fe66eb560a28ddda0e902e9
+      TZ: ${OPENCLAW_TZ:-UTC}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+    volumes:
+      - /Users/zhangheli/.openclaw-sdet:/home/node/.openclaw
+      - /Users/zhangheli/openclaw-workspace/sdet:/home/node/.openclaw/workspace
+    ports:
+      - "18791:18789"
+    init: true
+    restart: unless-stopped
+    command:
+      ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:18789/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
