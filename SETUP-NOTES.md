@@ -195,3 +195,12 @@ OpenClaw 要求最低 16000 tokens，設太小會自動 fallback 到 GPT-4o：
 - 出現 "Compacting context..." 時
 - bot 開始回答奇怪或前後矛盾時
 - 想開始全新對話、切換話題時
+
+### Q: Compacting context 之後 bot 跳出一段奇怪的自我介紹是正常的嗎？
+**正常，這就是「已清掉」的確認訊號。** 實際觀察到的回覆：
+```
+Hey there! I'm a helpful assistant here to support you with your projects.
+What do you need help with today? ...
+```
+這表示 context 已壓縮清空，bot 用預設開場白重新開始。
+之後正常傳訊息繼續使用即可，不需要做任何操作。
