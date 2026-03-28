@@ -163,3 +163,35 @@ OpenClaw 要求最低 16000 tokens，否則會自動 fallback 到 GPT-4o：
 OpenClaw 要求最低 16000 tokens，設太小會自動 fallback 到 GPT-4o：
 - 8b 模型設 `16384` 即可（再大會讓模型佔用更多記憶體且變慢）
 - 30b 模型設 `32768`（有足夠記憶體支撐）
+
+### Q: 出現 "Compacting context..." 是什麼意思？
+**正常現象，不需擔心。** 這是 OpenClaw 的自動 context 壓縮機制：
+- 每次對話累積的 tokens 接近 `contextWindow` 上限時自動觸發
+- 以 8b（contextWindow: 16384）為例，約累積 12,000+ tokens 時觸發
+- 壓縮過程：把舊對話「摘要」後刪除，騰出空間給新對話
+
+**影響：**
+- 很久以前說的內容可能被摘要掉，bot 可能「忘記」早期細節
+- 當前問題不受影響，照常回答
+- 壓縮本身需要幾秒
+
+**如何減少觸發：**
+- 定期 `/reset` 清掉對話（推薦）
+- 或把 contextWindow 調大（但會讓 8b 變慢）
+
+### Q: `/reset` 之後預期看到什麼？怎麼確認真的清掉了？
+在 Telegram 發送 `/reset` 後，bot 會回覆類似：
+```
+🔄 Session reset.
+```
+或是一段確認訊息表示已重置。
+
+**確認清掉的方法：**
+1. 發送 `/status`，看 `Tokens: X in / X out` 數字有沒有歸零或變很小
+2. 問 bot「你記得我剛才說了什麼嗎？」→ 如果真的清掉，它會說不記得
+3. 看 `Context: X/128k (X%)` 百分比有沒有降回很低
+
+**什麼時候需要 `/reset`：**
+- 出現 "Compacting context..." 時
+- bot 開始回答奇怪或前後矛盾時
+- 想開始全新對話、切換話題時
