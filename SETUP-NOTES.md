@@ -5,6 +5,34 @@
 
 ---
 
+## 🗺️ 導讀：從哪裡開始看？
+
+**第一次看這份文件，按這個順序：**
+
+```
+1. 這份檔案（SETUP-NOTES.md）← 你在這裡
+   位置：/Volumes/D/Documents/OpenClaw/SETUP-NOTES.md
+
+2. 環境設定檔
+   位置：/Volumes/D/Documents/OpenClaw/.env
+   → 改 API key、port、路徑都在這裡
+
+3. Gateway 設定檔
+   位置：/Users/zhangheli/.openclaw/openclaw.json
+   → 改模型、Telegram token、channel 行為都在這裡
+
+4. Bot 人格檔案（想改 bot 個性才需要看）
+   位置：/Users/zhangheli/openclaw-workspace/SOUL.md
+```
+
+**遇到問題時：**
+- Bot 沒反應 / 重啟 gateway → 看「常用指令」章節
+- 模型太慢 / 切換模型 → 看「切換模型」章節
+- Bot 亂回答 / 忘記事情 → 看「常見問題 Q&A」章節
+- 想改 bot 個性 → 看「人格與記憶檔案」章節
+
+---
+
 ## 環境架構
 
 ```
