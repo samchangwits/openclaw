@@ -204,3 +204,53 @@ What do you need help with today? ...
 ```
 這表示 context 已壓縮清空，bot 用預設開場白重新開始。
 之後正常傳訊息繼續使用即可，不需要做任何操作。
+
+---
+
+## 人格與記憶檔案
+
+> 這些檔案決定了 bot 的個性、行為與記憶，全部放在 workspace 目錄下。
+
+**位置：** `/Users/zhangheli/openclaw-workspace/`
+
+### 各檔案功能說明
+
+| 檔案 | 用途 | 何時修改 |
+|------|------|---------|
+| `SOUL.md` | **人格核心**：bot 的個性、價值觀、說話風格 | 想改 bot 的個性時 |
+| `AGENTS.md` | **行為規則**：啟動流程、記憶管理、群組聊天規則 | 想改行為邏輯時 |
+| `USER.md` | **關於你**：讓 bot 記住你是誰、你的習慣偏好 | 想讓 bot 更了解你時 |
+| `IDENTITY.md` | **身份**：bot 的名字、定位、emoji | 想給 bot 取名時 |
+| `HEARTBEAT.md` | **定時提醒**：bot 定時主動巡查的任務清單 | 想設定定時提醒時 |
+| `memory/YYYY-MM-DD.md` | **每日記錄**：當天發生的事，bot 自動寫入 | 不需要手動改 |
+| `MEMORY.md` | **長期記憶**：bot 從每日記錄中萃取的重要資訊 | 不需要手動改 |
+
+### 重點：Mac app 和 Telegram 的 session 是分開的
+
+你的設定 `"dmScope": "per-channel-peer"` 表示每個介面有獨立的 session：
+
+| Session | 記憶 |
+|---------|------|
+| Mac app | 獨立，不和 Telegram 共用 |
+| Telegram | 獨立，不和 Mac app 共用 |
+
+- Mac app 問的問題，Telegram **不知道**
+- Telegram 問的問題，Mac app **不知道**
+- `/reset` 只清掉**你發送那個介面**的 session
+- 但 `SOUL.md`、`USER.md` 等檔案是**共用的**，兩個介面都會讀
+
+### 如何自訂 bot 人格（改說話風格）
+
+直接編輯 `SOUL.md`：
+```bash
+open /Users/zhangheli/openclaw-workspace/SOUL.md
+```
+
+例如加一行：「請用繁體中文回答所有問題」，重啟 gateway 後生效。
+
+### 如何讓 bot 記住你的資訊
+
+編輯 `USER.md`，填入你的名字、時區、偏好等：
+```bash
+open /Users/zhangheli/openclaw-workspace/USER.md
+```
